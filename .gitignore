@@ -9,5 +9,4 @@ utils.egg-info/
 poetry.lock
 
 # jupyter notebooks
-*.ipynb
 *.ipynb_checkpoints
