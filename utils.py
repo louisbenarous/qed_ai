@@ -1,10 +1,11 @@
 import os
+import getpass
 import openai
 from functools import cache
 
 @cache
 def get_openai_api_key():
-    return input('OpenAI API key=\n')
+    return getpass.getpass('Input OpenAI API key= ')
 
 
 openai.api_key = os.getenv("OPENAI_API_KEY", get_openai_api_key())
