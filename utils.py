@@ -1,6 +1,13 @@
 import os
 import openai
-openai.api_key = os.getenv("OPENAI_API_KEY")
+from functools import cache
+
+@cache
+def get_openai_api_key():
+    return input('OpenAI API key=\n')
+
+
+openai.api_key = os.getenv("OPENAI_API_KEY", get_openai_api_key())
 
 
 def get_openai_response(system_prompt, user_prompt, model="gpt-3.5-turbo"):
