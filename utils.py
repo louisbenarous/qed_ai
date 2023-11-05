@@ -45,7 +45,7 @@ def get_openai_response_from_url(
     prompt: str,
     url: str,
     embedding_model: str = "text-embedding-ada-002",
-    llm_model="gpt-4",
+    llm_model: str = "gpt-4",
 ) -> str:
     """
     Ask question to OpenAPI regarding content in a given webpage
