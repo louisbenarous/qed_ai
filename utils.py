@@ -48,7 +48,7 @@ def get_openai_response_from_url(
     llm_model="gpt-4",
 ) -> str:
     """
-    Ask question to OpenAPI regarding content in a given website
+    Ask question to OpenAPI regarding content in a given webpage
     Following the steps described in https://python.langchain.com/docs/use_cases/question_answering/
     :return: OpenAI response
     """
@@ -80,6 +80,3 @@ def get_openai_response_from_url(
     # ask prompt and return response
     response = rag_chain.invoke(prompt)
     return response.content
-
-
-# todo: add finetuning example
