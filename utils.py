@@ -19,7 +19,7 @@ def get_openai_api_key():
     return getpass.getpass("Input OpenAI API key= ")
 
 
-api_key = os.getenv("OPENAI_API_KEY", get_openai_api_key())
+api_key = os.getenv("OPENAI_API_KEY") or get_openai_api_key()
 client = OpenAI(api_key=api_key)
 
 
@@ -85,10 +85,7 @@ def get_openai_response_from_url(
     return response.content
 
 
-def get_image(
-        prompt: str,
-        n: int
-) -> Image.Image:
+def get_image(prompt: str) -> Image.Image:
     """
     Generate an image using DALL.E 3
     :return: Image object
@@ -98,7 +95,7 @@ def get_image(
         prompt=prompt,
         size="1024x1024",
         quality="standard",
-        n=n,
+        n=1,
     )
 
     image_url = response.data[0].url
