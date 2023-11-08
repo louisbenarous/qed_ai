@@ -107,8 +107,20 @@ def get_image(prompt: str) -> Image.Image:
     return im
 
 
+def get_assistant_and_thread(assistant_id: str) -> Tuple[Assistant, Thread]:
+    # open a thread (conversation) with the assistant
+    thread = client.beta.threads.create()
+
+    # retrieve my assistance created in https://platform.openai.com/assistants
+    assistant = client.beta.assistants.retrieve(assistant_id)
+    return assistant, thread
+
+
 def chat_with_assistant(
-    assistant: Thread, thread: Thread, message: str, instructions: Optional[str] = None
+    message: str,
+    assistant: Assistant,
+    thread: Thread,
+    instructions: Optional[str] = None,
 ):
     # create a message and push it onto the thread
     client.beta.threads.messages.create(
