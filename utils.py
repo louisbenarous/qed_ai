@@ -121,7 +121,7 @@ def chat_with_assistant(
     assistant: Assistant,
     thread: Thread,
     instructions: Optional[str] = None,
-):
+) -> str:
     # create a message and push it onto the thread
     client.beta.threads.messages.create(
         thread_id=thread.id, role="user", content=message
