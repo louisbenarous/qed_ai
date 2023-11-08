@@ -1,9 +1,13 @@
+import logging
 import os
 import getpass
 import requests
+import time
 from PIL import Image
 from openai import OpenAI
-from typing import Optional, List
+from openai.resources.beta.assistants.assistants import Assistant
+from openai.resources.beta.threads.threads import Thread
+from typing import Optional, Tuple
 from functools import cache
 from langchain import hub
 from langchain.chat_models import ChatOpenAI
@@ -101,3 +105,25 @@ def get_image(prompt: str) -> Image.Image:
     image_url = response.data[0].url
     im = Image.open(requests.get(image_url, stream=True).raw)
     return im
+
+
+def chat_with_assistant(
+    assistant: Thread, thread: Thread, message: str, instructions: Optional[str] = None
+):
+    # create a message and push it onto the thread
+    client.beta.threads.messages.create(
+        thread_id=thread.id, role="user", content=message
+    )
+
+    run = client.beta.threads.runs.create(
+        thread_id=thread.id, assistant_id=assistant.id, instructions=instructions
+    )
+
+    while not run.completed_at:
+        logging.debug("polling...")
+        run = client.beta.threads.runs.retrieve(thread_id=thread.id, run_id=run.id)
+        time.sleep(2)
+
+    messages = client.beta.threads.messages.list(thread_id=thread.id)
+
+    return messages.data[0].content[0].text.value
