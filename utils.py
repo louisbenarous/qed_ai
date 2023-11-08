@@ -1,6 +1,7 @@
 import os
 import getpass
-
+import requests
+from PIL import Image
 from openai import OpenAI
 from typing import Optional, List
 from functools import cache
@@ -82,3 +83,24 @@ def get_openai_response_from_url(
     # ask prompt and return response
     response = rag_chain.invoke(prompt)
     return response.content
+
+
+def get_image(
+        prompt: str,
+        n: int
+) -> Image.Image:
+    """
+    Generate an image using DALL.E 3
+    :return: Image object
+    """
+    response = client.images.generate(
+        model="dall-e-3",
+        prompt=prompt,
+        size="1024x1024",
+        quality="standard",
+        n=n,
+    )
+
+    image_url = response.data[0].url
+    im = Image.open(requests.get(image_url, stream=True).raw)
+    return im
