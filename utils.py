@@ -1,6 +1,7 @@
 import os
 import getpass
-import openai
+
+from openai import OpenAI
 from typing import Optional, List
 from functools import cache
 from langchain import hub
@@ -17,7 +18,8 @@ def get_openai_api_key():
     return getpass.getpass("Input OpenAI API key= ")
 
 
-openai.api_key = os.getenv("OPENAI_API_KEY", get_openai_api_key())
+api_key = os.getenv("OPENAI_API_KEY", get_openai_api_key())
+client = OpenAI(api_key=api_key)
 
 
 def get_openai_response(
@@ -30,7 +32,7 @@ def get_openai_response(
     Basic query to OpenAPI
     :return: OpenAI response
     """
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model=model,
         temperature=temperature,
         messages=[
@@ -60,7 +62,7 @@ def get_openai_response_from_url(
 
     # define util we'll use to embed the documents.
     embedder = OpenAIEmbeddings(
-        openai_api_key=openai.api_key,
+        openai_api_key=api_key,
         model=embedding_model,
     )
 
@@ -69,7 +71,7 @@ def get_openai_response_from_url(
     retriever = vector_store.as_retriever()
 
     # define the large language model we'll use to answer the prompt
-    llm = ChatOpenAI(openai_api_key=openai.api_key, model_name=llm_model)
+    llm = ChatOpenAI(openai_api_key=api_key, model_name=llm_model)
 
     # put it all together
     rag_prompt = hub.pull("rlm/rag-prompt")
